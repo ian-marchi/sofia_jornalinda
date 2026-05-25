@@ -1,0 +1,500 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Planner ENEM responsivo em tema rosa, com painel de progresso, cronograma semanal, metas, calendário, revisões, simulados, redação, questões e caderno de erros."
+    />
+    <title>Planner ENEM | Cronograma de Estudos</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="shell topbar__inner">
+        <a class="brand" href="#inicio" aria-label="Ir para o início">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7 3.75h10A2.25 2.25 0 0 1 19.25 6v12A2.25 2.25 0 0 1 17 20.25H7A2.25 2.25 0 0 1 4.75 18V6A2.25 2.25 0 0 1 7 3.75Z" stroke="currentColor" stroke-width="1.8" />
+              <path d="M8.5 8h7M8.5 12h4.5M8.5 16h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span>Planner ENEM</span>
+        </a>
+        <nav class="nav" aria-label="Seções do planner">
+          <a href="#painel">Painel</a>
+          <a href="#metas">Metas</a>
+          <a href="#semana">Semana</a>
+          <a href="#calendario">Calendário</a>
+          <a href="#controles">Controles</a>
+          <a href="#revisoes">Revisões</a>
+          <a href="#simulados">Simulados</a>
+          <a href="#extras">Extras</a>
+          <a href="#erros">Erros</a>
+          <a href="#foco">Foco</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="shell">
+      <section class="hero" id="inicio">
+        <div class="hero__copy">
+          <div>
+            <h1>Planner ENEM</h1>
+            <p>
+              Cronograma adaptado para manter constância em Matemática, Natureza,
+              Redação e revisões estratégicas, respeitando curso, educação física
+              e ensaios.
+            </p>
+          </div>
+
+          <div class="identity-grid" aria-label="Identificação do planner">
+            <label class="field">
+              <span>Nome</span>
+              <input data-store="studentName" type="text" placeholder="Seu nome" />
+            </label>
+            <label class="field">
+              <span>Mês</span>
+              <input id="plannerMonth" data-store="plannerMonth" type="month" />
+            </label>
+            <label class="field">
+              <span>Meta de nota</span>
+              <input data-store="targetScore" type="number" min="0" max="1000" placeholder="Ex.: 780" />
+            </label>
+          </div>
+
+          <div class="actions">
+            <button class="button button--primary" type="button" id="focusToday">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              Check-in de hoje
+            </button>
+            <button class="button" type="button" id="printPlanner">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M7 8V4h10v4M7 17H5.8A2.8 2.8 0 0 1 3 14.2V11a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v3.2a2.8 2.8 0 0 1-2.8 2.8H17M7 14h10v6H7v-6Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+              </svg>
+              Imprimir
+            </button>
+            <button class="button" type="button" id="resetPlanner">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 12a7 7 0 1 0 2.05-4.95M5 5v5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Limpar checks
+            </button>
+            <button class="button" type="button" id="exportPlanner">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 4v10m0 0 4-4m-4 4-4-4M5 18.5h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Exportar
+            </button>
+            <label class="button" for="importPlannerFile">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 20V10m0 0 4 4m-4-4-4 4M5 5.5h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              Importar
+            </label>
+            <input class="file-input" id="importPlannerFile" type="file" accept="application/json" />
+          </div>
+        </div>
+
+        <aside class="panel hero-card" aria-label="Resumo de progresso">
+          <div class="hero-card__content">
+            <div class="progress-card">
+              <div class="progress-ring" id="progressRing" aria-label="Progresso concluído">
+                <strong id="progressValue">0%</strong>
+              </div>
+              <div class="progress-copy">
+                <h2>Check-ins da semana</h2>
+                <p id="progressText">Marque seus blocos concluídos para acompanhar o ritmo.</p>
+              </div>
+            </div>
+
+            <div>
+              <p class="mini-label">Dias estudados</p>
+              <div class="checkin-strip" id="dailyCheckins" aria-label="Check-ins diários"></div>
+            </div>
+
+            <ul class="mini-list" aria-label="Estratégia da rotina">
+              <li><strong>Dias pesados</strong><span class="tag">Segunda e sábado</span></li>
+              <li><strong>Dias moderados</strong><span class="tag">Terça a quinta</span></li>
+              <li><strong>Dia leve</strong><span class="tag">Sexta</span></li>
+              <li><strong>Domingo</strong><span class="tag">Revisão ou descanso</span></li>
+            </ul>
+          </div>
+        </aside>
+      </section>
+
+      <main>
+        <section id="painel" class="reveal">
+          <div class="section-head">
+            <div>
+              <h2>Painel rápido</h2>
+            </div>
+            <p>Resumo vivo do que já foi marcado, registrado e planejado para a semana.</p>
+          </div>
+
+          <div class="metric-grid" aria-label="Indicadores do planner">
+            <article class="metric-card">
+              <span>Progresso geral</span>
+              <strong id="metricProgress">0%</strong>
+              <p id="metricProgressText">Nenhum bloco concluído ainda.</p>
+            </article>
+            <article class="metric-card">
+              <span>Dias no mês</span>
+              <strong id="metricStudyDays">0</strong>
+              <p>Dias marcados no calendário.</p>
+            </article>
+            <article class="metric-card">
+              <span>Questões feitas</span>
+              <strong id="metricQuestions">0</strong>
+              <p id="metricQuestionsText">Some as semanas para ver o ritmo.</p>
+            </article>
+            <article class="metric-card">
+              <span>Média redação</span>
+              <strong id="metricEssayAverage">0</strong>
+              <p id="metricEssayText">Registre notas para acompanhar evolução.</p>
+            </article>
+          </div>
+
+          <div class="grid grid--two grid--spaced">
+            <article class="card">
+              <div class="card__inner">
+                <h3>Hoje no plano</h3>
+                <ul class="detail-list">
+                  <li class="detail-row"><strong>Dia</strong><span id="todayLabel">Carregando...</span></li>
+                  <li class="detail-row"><strong>Foco</strong><span id="todayFocus">Carregando...</span></li>
+                  <li class="detail-row"><strong>Ritmo</strong><span id="todayWeight">Carregando...</span></li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="card card--sage">
+              <div class="card__inner">
+                <h3>Próximas revisões</h3>
+                <ul class="detail-list" id="reviewQueue">
+                  <li class="detail-row"><strong>Fila</strong><span>Nenhuma revisão cadastrada ainda.</span></li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="metas" class="reveal">
+          <div class="section-head">
+            <div>
+              <h2>Metas do mês</h2>
+            </div>
+            <p>Prioridades mensais com espaço para ajustar redações, questões e simulados.</p>
+          </div>
+
+          <div class="grid grid--two">
+            <article class="card">
+              <div class="card__inner">
+                <h3>Lista principal</h3>
+                <ul class="goal-list">
+                  <li>
+                    <label class="check-row">
+                      <input data-progress data-store="goal-content" type="checkbox" />
+                      <span class="box" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="m4 10 4 4 8-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+                      <span class="check-text"><strong>Finalizar conteúdos prioritários</strong><span>Matemática, Natureza e Redação em primeiro plano.</span></span>
+                    </label>
+                  </li>
+                  <li>
+                    <label class="check-row">
+                      <input data-progress data-store="goal-essays" type="checkbox" />
+                      <span class="box" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="m4 10 4 4 8-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+                      <span class="check-text"><strong>Fazer <input class="inline-number" data-store="goalEssaysAmount" type="number" min="0" placeholder="__" /> redações</strong><span>Comece com 1 completa por semana.</span></span>
+                    </label>
+                  </li>
+                  <li>
+                    <label class="check-row">
+                      <input data-progress data-store="goal-questions" type="checkbox" />
+                      <span class="box" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="m4 10 4 4 8-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+                      <span class="check-text"><strong>Resolver <input class="inline-number" data-store="goalQuestionsAmount" type="number" min="0" placeholder="__" /> questões</strong><span>Meta ideal: 120 a 150 por semana.</span></span>
+                    </label>
+                  </li>
+                  <li>
+                    <label class="check-row">
+                      <input data-progress data-store="goal-simulates" type="checkbox" />
+                      <span class="box" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="m4 10 4 4 8-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+                      <span class="check-text"><strong>Fazer <input class="inline-number" data-store="goalSimulatesAmount" type="number" min="0" placeholder="__" /> simulados</strong><span>Inclua correção dos erros no mesmo ciclo.</span></span>
+                    </label>
+                  </li>
+                  <li>
+                    <label class="check-row">
+                      <input data-progress data-store="goal-errors" type="checkbox" />
+                      <span class="box" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none"><path d="m4 10 4 4 8-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg></span>
+                      <span class="check-text"><strong>Revisar caderno de erros semanalmente</strong><span>Transforme erro repetido em revisão ativa.</span></span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="card card--lemon">
+              <div class="card__inner">
+                <h3>Meta semanal ideal</h3>
+                <ul class="mini-list">
+                  <li><strong>Questões</strong><span>120 a 150</span></li>
+                  <li><strong>Redação</strong><span>1 completa</span></li>
+                  <li><strong>Simulado</strong><span>1 mini simulado</span></li>
+                  <li><strong>Revisão</strong><span>Erros + atualidades</span></li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="semana" class="reveal">
+          <div class="section-head">
+            <div>
+              <h2>Planner semanal fixo</h2>
+            </div>
+            <p>Blocos de estudo distribuídos para evitar desgaste mental antes dos compromissos fixos.</p>
+          </div>
+          <div class="week-grid" id="weekGrid"></div>
+        </section>
+
+        <section id="calendario" class="reveal">
+          <div class="section-head">
+            <div>
+              <h2>Calendário mensal</h2>
+            </div>
+            <p>Marque os dias em que cumpriu pelo menos um bloco de estudo.</p>
+          </div>
+          <article class="card calendar-wrap">
+            <div class="card__inner">
+              <div class="calendar-toolbar">
+                <h3 class="calendar-title" id="calendarTitle">Calendário</h3>
+                <div class="calendar-nav">
+                  <button class="button button--small" type="button" id="prevMonth">Mês anterior</button>
+                  <button class="button button--small" type="button" id="nextMonth">Próximo mês</button>
+                </div>
+              </div>
+              <div class="calendar" id="calendarGrid" aria-label="Calendário mensal"></div>
+            </div>
+          </article>
+        </section>
+
+        <section id="controles" class="reveal">
+          <div class="section-head">
+            <div>
+              <h2>Controles</h2>
+            </div>
+            <p>Registre questões, redações e evolução sem depender de aplicativo externo.</p>
+          </div>
+
+          <div class="grid grid--two">
+            <article class="card table-card">
+              <div class="card__inner">
+                <h3>Controle de questões</h3>
+                <table class="responsive-table">
+                  <thead>
+                    <tr>
+                      <th>Semana</th>
+                      <th>Meta</th>
+                      <th>Feitas</th>
+                      <th>Faltam</th>
+                      <th>Ritmo</th>
+                    </tr>
+                  </thead>
+                  <tbody id="questionRows"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="card table-card">
+              <div class="card__inner">
+                <h3>Controle de redação</h3>
+                <table class="responsive-table">
+                  <thead>
+                    <tr>
+                      <th>Data</th>
+                      <th>Tema</th>
+                      <th>Nota</th>
+                      <th>Competência foco</th>
+                      <th>Melhorar</th>
+                    </tr>
+                  </thead>
+                  <tbody id="essayRows"></tbody>
+                </table>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="revisoes" class="reveal">
+          <div class="section-head">
+            <div>
+              <h2>Revisões</h2>
+            </div>
+            <p>Organize assuntos que precisam voltar em 24 horas, 7 dias ou no ciclo de fim de semana.</p>
+          </div>
+
+          <article class="card table-card">
+            <div class="card__inner">
+              <h3>Fila de revisão ativa</h3>
+              <table class="responsive-table">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Assunto</th>
+                    <th>Área</th>
+                    <th>Próxima ação</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="reviewRows"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section id="simulados" class="reveal">
+          <div class="section-head">
+            <div>
+              <h2>Simulados</h2>
+            </div>
+            <p>Registre desempenho por área para enxergar onde a próxima semana deve ficar mais pesada.</p>
+          </div>
+
+          <article class="card table-card">
+            <div class="card__inner">
+              <h3>Resultados</h3>
+              <table class="responsive-table">
+                <thead>
+                  <tr>
+                    <th>Data</th>
+                    <th>Matemática</th>
+                    <th>Natureza</th>
+                    <th>Humanas</th>
+                    <th>Linguagens</th>
+                    <th>Redação</th>
+                    <th>Observação</th>
+                  </tr>
+                </thead>
+                <tbody id="simulateRows"></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+
+        <section id="extras" class="reveal">
+          <div class="section-head">
+            <div>
+              <h2>Tarefas extras</h2>
+            </div>
+            <p>Use para demandas soltas: prova, trabalho, leitura, inscrição, aula ou revisão emergencial.</p>
+          </div>
+
+          <article class="card">
+            <div class="card__inner">
+              <h3>Lista flexível</h3>
+              <form class="quick-form" id="extraTaskForm">
+                <input class="table-input" id="extraTaskTitle" type="text" placeholder="Nova tarefa" />
+                <select class="select-input" id="extraTaskType" aria-label="Tipo da tarefa">
+                  <option value="Estudo">Estudo</option>
+                  <option value="Redação">Redação</option>
+                  <option value="Simulado">Simulado</option>
+                  <option value="Pessoal">Pessoal</option>
+                </select>
+                <button class="button button--primary" type="submit">Adicionar</button>
+              </form>
+              <div class="extra-list" id="extraTaskList"></div>
+            </div>
+          </article>
+        </section>
+
+        <section id="erros" class="reveal">
+          <div class="section-head">
+            <div>
+              <h2>Caderno de erros</h2>
+            </div>
+            <p>Use este espaço para padrões de erro, fórmulas esquecidas e temas que precisam voltar.</p>
+          </div>
+
+          <div class="note-grid">
+            <article class="card">
+              <div class="card__inner">
+                <label class="field">
+                  <span>Anotações</span>
+                  <textarea data-store="errorNotebook" placeholder="- Matemática:&#10;- Natureza:&#10;- Redação:&#10;- Revisar novamente em:"></textarea>
+                </label>
+              </div>
+            </article>
+
+            <article class="card card--sky">
+              <div class="card__inner">
+                <h3>Estratégia ideal para sua rotina</h3>
+                <div class="strategy">
+                  <div class="strategy-row"><strong>Segunda</strong><span>Matemática com foco forte e revisão de fórmulas.</span></div>
+                  <div class="strategy-row"><strong>Terça</strong><span>Física antes da educação física e Redação à noite.</span></div>
+                  <div class="strategy-row"><strong>Sexta</strong><span>Dia mais leve, com Biologia e escrita/correção após ensaio.</span></div>
+                  <div class="strategy-row"><strong>Domingo</strong><span>Escolha entre descanso real ou revisão geral da semana.</span></div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="foco" class="reveal">
+          <div class="section-head">
+            <div>
+              <h2>Foco principal</h2>
+            </div>
+            <p>Conteúdos com maior retorno para manter no topo das revisões até o ENEM.</p>
+          </div>
+
+          <div class="grid grid--three">
+            <article class="card priority-card">
+              <div class="card__inner">
+                <h3>Matemática</h3>
+                <ul class="priority-list">
+                  <li><span class="dot"></span>Porcentagem</li>
+                  <li><span class="dot"></span>Funções</li>
+                  <li><span class="dot"></span>Estatística</li>
+                  <li><span class="dot"></span>Geometria</li>
+                  <li><span class="dot"></span>Probabilidade</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="card priority-card">
+              <div class="card__inner">
+                <h3>Natureza</h3>
+                <ul class="priority-list">
+                  <li><span class="dot dot--mint"></span>Ecologia</li>
+                  <li><span class="dot dot--mint"></span>Genética</li>
+                  <li><span class="dot dot--mint"></span>Eletricidade</li>
+                  <li><span class="dot dot--mint"></span>Química orgânica</li>
+                  <li><span class="dot dot--mint"></span>Estequiometria</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="card priority-card">
+              <div class="card__inner">
+                <h3>Redação</h3>
+                <ul class="priority-list">
+                  <li><span class="dot dot--gold"></span>1 redação completa por semana agora</li>
+                  <li><span class="dot dot--gold"></span>2 redações por semana em 2026</li>
+                  <li><span class="dot dot--gold"></span>Introdução, conclusão e repertório</li>
+                  <li><span class="dot dot--gold"></span>Análise de redação nota 1000</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <footer class="footer">
+      <div class="shell">Feito para estudar com leveza, constância e revisão inteligente.</div>
+    </footer>
+    <div class="app-message" id="appMessage" role="status" aria-live="polite"></div>
+    <script src="./app.js" defer></script>
+  </body>
+</html>
+
