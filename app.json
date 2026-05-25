@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "Planner ENEM",
+    "slug": "sofia-jornalinda",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "sofiaplanner",
+    "userInterfaceStyle": "light",
+    "platforms": ["ios", "android"],
+    "android": {
+      "package": "com.ianmarchi.sofiajornalinda"
+    },
+    "ios": {
+      "bundleIdentifier": "com.ianmarchi.sofiajornalinda"
+    }
+  }
+}
