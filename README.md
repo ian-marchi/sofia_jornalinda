@@ -3,7 +3,7 @@
 Planner ENEM em duas versões no mesmo repositório:
 
 - Site estático em HTML, CSS e JavaScript puro, pronto para GitHub Pages.
-- Aplicação Expo Go em React Native, usando a mesma lógica de planner.
+- Aplicação Expo Go em React Native, usando a mesma lógica de planner e Expo SDK 54.
 
 ## Arquivos
 
@@ -12,7 +12,7 @@ Planner ENEM em duas versões no mesmo repositório:
 - `app.js`: calendário, progresso, persistência local, importação/exportação e tarefas.
 - `index.js`: entrada da aplicação Expo.
 - `src/`: telas, dados e tema da aplicação Expo Go.
-- `app.json`, `package.json`, `babel.config.js`: configuração Expo.
+- `app.json`, `package.json`, `babel.config.js`: configuração Expo SDK 54.
 - `.nojekyll`: mantém o GitHub Pages em modo estático simples.
 
 ## Publicar no GitHub Pages
@@ -26,6 +26,8 @@ Planner ENEM em duas versões no mesmo repositório:
 Os dados preenchidos no planner ficam salvos no navegador da pessoa usando `localStorage`.
 
 ## Usar no Expo Go
+
+Esta versão mobile está fixada em Expo SDK 54 (`expo ~54.0.0`, React Native `0.81.5` e React `19.1.0`), para funcionar com Expo Go compatível com SDK 54.
 
 Na raiz do projeto:
 
